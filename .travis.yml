@@ -1,15 +1,17 @@
 language: node_js
 node_js:
-  - node
-  - lts/*
+- node
+- lts/*
 notifications:
   email: false
 script:
-  - npm run build
+- npm run build
 deploy:
   skip_cleanup: true
   on:
     node: lts/*
   provider: s3
   bucket: com.shepherdjerred.ec2-instance-restart
-  access_key_id: AKIA2CQO232KCVMXJSN4
+  access_key_id: AKIA2CQO232KLOSP3U2Z
+  secret_access_key:
+    secure: BxjF3GBR7mBWMeETHPKWfN3qtAirWFCTjuxGtXpvHkuUeSmlLqMyHbwpHZEpNcnvhemN4demao0D2Ajv0mqaUrqS95wqxbwn+jgXsjkL5vCbCsYp97i9/+ONWpFUCrITeKDMHp4nYXRc3ybCGDKRhehboaFTBBxxr+3kGgt+RaCkSpRZJg/5t+hkTt0zaXPvRIH/+7AW8iaxSmNJsUDHxIe2kTq7Iu/u8Rw8nx2DfKhMgiqRUpTedt+h9tNjDXzm2XoL8YWwmYW5fmQuN/h16JaMMlniJlmWWPQgk+XivWDSY66xL9oNv/D9DTXXZwUR5V9H4Bx3a2sXL7lQ8aeZSCG7+iP9UlgdwSo+l6V1CNIAkbZHsMQDuKN9HCwFkl3NtS1yiFcoyGCbUzuDfib4iXrRHJTruCUc5d9tqeq5KvNjWsEzOPNPkYYkIudlxTsL0y9Fg2H6JBuzxMAg0FibB2wsJcJ9VwQEgQKzKmKky4T20PAMguPtJyEmaolWs7hHDBLUDU/UncW4zaZTZ04VGe1EsqAjh6UDHQuFhdtBYK1+LwaCaow1VT0qYb8x601tCrgQpFy4eyShA73CWwg2X1c/P+5ymsWPW0tDIy6CM06ctm1HXg9VoimcRj+BzDn0+qpZ5T4mfvSV8kqsnN0m5pOnG4TABWf1Wx5nmt7HDjI=
