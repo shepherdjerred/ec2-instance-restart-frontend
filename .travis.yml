@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - node
+  - lts/*
+notifications:
+  email: false
+script:
+  - npm run build
+deploy:
+  skip_cleanup: true
+  on:
+    node: lts/*
+  provider: s3
+  bucket: com.shepherdjerred.ec2-instance-restart
+  access_key_id: AKIA2CQO232KCVMXJSN4
