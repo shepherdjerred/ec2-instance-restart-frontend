@@ -226,7 +226,7 @@ export default class Home extends React.Component<unknown, HomeState> {
                         "is-success": true,
                         "is-loading": this.state.loading && this.state.activeButton === Button.START,
                       })}
-                      disabled={this.state.loading && this.state.activeButton != Button.START}
+                      disabled={this.state.loading && this.state.activeButton !== Button.START}
                     >
                       Start
                     </button>
@@ -239,7 +239,7 @@ export default class Home extends React.Component<unknown, HomeState> {
                         "is-danger": true,
                         "is-loading": this.state.loading && this.state.activeButton === Button.STOP,
                       })}
-                      disabled={this.state.loading && this.state.activeButton != Button.STOP}
+                      disabled={this.state.loading && this.state.activeButton !== Button.STOP}
                     >
                       Stop
                     </button>
