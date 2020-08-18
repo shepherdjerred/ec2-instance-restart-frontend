@@ -1,10 +1,12 @@
 import React from "react";
-import axios, { AxiosResponse } from "axios";
+import axios, {AxiosResponse} from "axios";
 import classNames from "classnames";
 
 interface HomeState {
   response: ApiResponse | null;
-  secret: string;
+  instance_id: string;
+  aws_access_key_id: string;
+  aws_secret_access_key: string;
   loading: boolean;
   status: InstanceStatus;
   statusAttempt: number;
@@ -44,7 +46,9 @@ export default class Home extends React.Component<unknown, HomeState> {
     super(props);
     this.state = {
       response: null,
-      secret: localStorage.getItem("secret") || "",
+      instance_id: localStorage.getItem("instance_id") || "",
+      aws_access_key_id: localStorage.getItem("aws_access_key_id") || "",
+      aws_secret_access_key: localStorage.getItem("aws_secret_access_key") || "",
       loading: false,
       status: InstanceStatus.UNKNOWN,
       statusAttempt: 0,
@@ -56,21 +60,35 @@ export default class Home extends React.Component<unknown, HomeState> {
     this.getInstanceStatus().then();
   }
 
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  handleInstanceIdChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({
-      ...this.state,
-      secret: event.target.value,
+      instance_id: event.target.value,
+    });
+  };
+
+  handleAwsAccessKeyIdChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    this.setState({
+      aws_access_key_id: event.target.value,
+    });
+  };
+
+  handleAwsSecretAccessKeyChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    this.setState({
+      aws_secret_access_key: event.target.value,
     });
   };
 
   getInstanceStatus = async (): Promise<void> => {
-    if (this.state.secret === "") {
+    if (this.state.aws_secret_access_key === "") {
       console.log("Skipping status check since secret is empty");
       return;
     }
 
     const response = await axios.post<ApiResponse>("https://instance-api.shepherdjerred.com/status", {
-      secret: this.state.secret,
+      aws_secret_access_key: this.state.aws_secret_access_key,
+      aws_access_key_id: this.state.aws_access_key_id,
+      instance_id: this.state.instance_id,
+      region: "us-east-1"
     });
 
     let status: InstanceStatus;
@@ -136,7 +154,10 @@ export default class Home extends React.Component<unknown, HomeState> {
     }
     this.beginRequest(Button.START);
     const response = await axios.post<ApiResponse>("https://instance-api.shepherdjerred.com/start", {
-      secret: this.state.secret,
+      aws_secret_access_key: this.state.aws_secret_access_key,
+      aws_access_key_id: this.state.aws_access_key_id,
+      instance_id: this.state.instance_id,
+      region: "us-east-1"
     });
     await this.endRequest(response);
   };
@@ -147,13 +168,18 @@ export default class Home extends React.Component<unknown, HomeState> {
     }
     this.beginRequest(Button.STOP);
     const response = await axios.post<ApiResponse>("https://instance-api.shepherdjerred.com/stop", {
-      secret: this.state.secret,
+      aws_secret_access_key: this.state.aws_secret_access_key,
+      aws_access_key_id: this.state.aws_access_key_id,
+      instance_id: this.state.instance_id,
+      region: "us-east-1"
     });
     await this.endRequest(response);
   };
 
   beginRequest(button: Button) {
-    localStorage.setItem("secret", this.state.secret);
+    localStorage.setItem("aws_secret_access_key", this.state.aws_secret_access_key);
+    localStorage.setItem("aws_access_key_id", this.state.aws_access_key_id);
+    localStorage.setItem("instance_id", this.state.instance_id);
     this.setState({
       ...this.state,
       response: null,
@@ -174,82 +200,105 @@ export default class Home extends React.Component<unknown, HomeState> {
 
   render() {
     const notification =
-      this.state.response != null ? (
-        <div
-          className={classNames({
-            notification: true,
-            "is-danger": this.state.response.statusCode >= 400,
-            "is-primary": this.state.response.statusCode < 400,
-          })}
-        >
-          {this.state.response.body}
-        </div>
-      ) : null;
+        this.state.response != null ? (
+            <div
+                className={classNames({
+                  notification: true,
+                  "is-danger": this.state.response.statusCode >= 400,
+                  "is-primary": this.state.response.statusCode < 400,
+                })}
+            >
+              {this.state.response.body}
+            </div>
+        ) : null;
 
     const instanceStatus =
-      this.state.status === InstanceStatus.UNKNOWN ? null : (
-        <div className="notification">{"Instance Status: " + this.convertEnum(this.state.status)}</div>
-      );
+        this.state.status === InstanceStatus.UNKNOWN ? null : (
+            <div
+                className="notification">{"Instance Status: " + this.convertEnum(this.state.status)}</div>
+        );
 
     return (
-      <div>
-        <section className="hero aws">
-          <div className="hero-body">
-            <div className="container">
-              <h1 className="title aws">EC2 Instance Control</h1>
+        <div>
+          <section className="hero aws">
+            <div className="hero-body">
+              <div className="container">
+                <h1 className="title aws">EC2 Instance Control</h1>
+              </div>
             </div>
-          </div>
-        </section>
-        <section className="section">
-          <div className="container">
-            <div className="columns">
-              <div className="column is-one-third is-offset-one-third">
-                {notification}
-                {instanceStatus}
-                <div className="field">
-                  <div className="control">
-                    <input
-                      type="text"
-                      value={this.state.secret}
-                      onChange={this.handleChange}
-                      placeholder="secret"
-                      className="input"
-                    />
+          </section>
+          <section className="section">
+            <div className="container">
+              <div className="columns">
+                <div className="column is-one-third is-offset-one-third">
+                  {notification}
+                  {instanceStatus}
+                  <div className="field">
+                    <div className="control">
+                      <input
+                          type="text"
+                          value={this.state.instance_id}
+                          onChange={this.handleInstanceIdChange}
+                          placeholder="instance_id"
+                          className="input"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="field is-grouped">
-                  <p className="control">
-                    <button
-                      onClick={this.startInstance}
-                      className={classNames({
-                        button: true,
-                        "is-success": true,
-                        "is-loading": this.state.loading && this.state.activeButton === Button.START,
-                      })}
-                      disabled={this.state.loading && this.state.activeButton !== Button.START}
-                    >
-                      Start
-                    </button>
-                  </p>
-                  <p className="control">
-                    <button
-                      onClick={this.stopInstance}
-                      className={classNames({
-                        button: true,
-                        "is-danger": true,
-                        "is-loading": this.state.loading && this.state.activeButton === Button.STOP,
-                      })}
-                      disabled={this.state.loading && this.state.activeButton !== Button.STOP}
-                    >
-                      Stop
-                    </button>
-                  </p>
+                  <div className="field">
+                    <div className="control">
+                      <input
+                          type="text"
+                          value={this.state.aws_access_key_id}
+                          onChange={this.handleAwsAccessKeyIdChange}
+                          placeholder="aws_access_key_id"
+                          className="input"
+                      />
+                    </div>
+                  </div>
+                  <div className="field">
+                    <div className="control">
+                      <input
+                          type="text"
+                          value={this.state.aws_secret_access_key}
+                          onChange={this.handleAwsSecretAccessKeyChange}
+                          placeholder="aws_secret_access_key"
+                          className="input"
+                      />
+                    </div>
+                  </div>
+                  <div className="field is-grouped">
+                    <p className="control">
+                      <button
+                          onClick={this.startInstance}
+                          className={classNames({
+                            button: true,
+                            "is-success": true,
+                            "is-loading": this.state.loading && this.state.activeButton === Button.START,
+                          })}
+                          disabled={this.state.loading && this.state.activeButton !== Button.START}
+                      >
+                        Start
+                      </button>
+                    </p>
+                    <p className="control">
+                      <button
+                          onClick={this.stopInstance}
+                          className={classNames({
+                            button: true,
+                            "is-danger": true,
+                            "is-loading": this.state.loading && this.state.activeButton === Button.STOP,
+                          })}
+                          disabled={this.state.loading && this.state.activeButton !== Button.STOP}
+                      >
+                        Stop
+                      </button>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      </div>
+          </section>
+        </div>
     );
   }
 }
