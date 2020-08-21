@@ -1,11 +1,11 @@
 language: node_js
 node_js:
-  - node
-  - lts/*
+- node
+- lts/*
 notifications:
   email: false
 script:
-  - npm run build
+- npm run build
 deploy:
   local_dir: build
   skip_cleanup: true
@@ -13,6 +13,6 @@ deploy:
     node: lts/*
   provider: s3
   bucket: com.shepherdjerred.ec2-instance-restart
-  access_key_id: AKIA2CQO232KLOSP3U2Z
+  access_key_id: AKIA2CQO232KCPEQDT7X
   secret_access_key:
-    secure: BxjF3GBR7mBWMeETHPKWfN3qtAirWFCTjuxGtXpvHkuUeSmlLqMyHbwpHZEpNcnvhemN4demao0D2Ajv0mqaUrqS95wqxbwn+jgXsjkL5vCbCsYp97i9/+ONWpFUCrITeKDMHp4nYXRc3ybCGDKRhehboaFTBBxxr+3kGgt+RaCkSpRZJg/5t+hkTt0zaXPvRIH/+7AW8iaxSmNJsUDHxIe2kTq7Iu/u8Rw8nx2DfKhMgiqRUpTedt+h9tNjDXzm2XoL8YWwmYW5fmQuN/h16JaMMlniJlmWWPQgk+XivWDSY66xL9oNv/D9DTXXZwUR5V9H4Bx3a2sXL7lQ8aeZSCG7+iP9UlgdwSo+l6V1CNIAkbZHsMQDuKN9HCwFkl3NtS1yiFcoyGCbUzuDfib4iXrRHJTruCUc5d9tqeq5KvNjWsEzOPNPkYYkIudlxTsL0y9Fg2H6JBuzxMAg0FibB2wsJcJ9VwQEgQKzKmKky4T20PAMguPtJyEmaolWs7hHDBLUDU/UncW4zaZTZ04VGe1EsqAjh6UDHQuFhdtBYK1+LwaCaow1VT0qYb8x601tCrgQpFy4eyShA73CWwg2X1c/P+5ymsWPW0tDIy6CM06ctm1HXg9VoimcRj+BzDn0+qpZ5T4mfvSV8kqsnN0m5pOnG4TABWf1Wx5nmt7HDjI=
+    secure: bAzcF+APJS4ofa0t88N8GLPm1mG+65iOQ1/resQGuuHW4LVlrk0YyoqHvobrmQAFiAzJXhkktonv8htbzCf7deyWnvODkhIZ4tstoZH9AYcc9PY4YTnw+xm9JKM+EdN1Z1+ED7jgadeRR2UWS+M2zRhHGv7exP/4A0MRU1vSHHV7eygtWV5N33h+J0PR79WtC8zX8juMsVt11/yJCjd2XwZhxtEsY5fli3nCRDkjUOoiNnsxz463b22zdH7M47/xaqNjAnqNpfxzQytMWDSXEa0F7CLVcl0kK9j63sELq9lhV9J8/y4qyGap0Z+jPMeLbnYPpcltNBp0JgdgFt83s2KIuoN9dj9rvD4LPaFZmIL3iz4HZaqSfpO/PperiJTxKZYmMG400UnntjvuJl76O/1rfyhixP2YRI4RJb+EfL0Ezj5BFrZGbsobPenNHYD3CDU3vphEz7PNScwcI+dIiFFw3KTciLBp4cijzk94AejVsRFN1HHKHeG8HoBB5ZQsP3Y3FEZ1hNorYZK6Aw9kanV0o7bDj3VNbbVKoVbD6ehrAlwgjlnk/8olsnu3TG426jvfa/AkLJcjPi8Rwz1XVEJ1UzKor3WIn+FeW+7h1OYLGsQwQPETfhYTfGx6b4y1MCFzfj9DpvqNxrS2mMtT9C+qRiWZ7yNENPv35i5QY4o=
