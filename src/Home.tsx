@@ -205,6 +205,13 @@ export default class Home extends React.Component<unknown, HomeState> {
                   />
                 </Buttons>
               </div>
+              <div className="column is-one-fifth">
+                <h2 className="title">Instance IDs</h2>
+                <ul>
+                  <li>Minecraft: i-0784bddc3df66775a</li>
+                  <li>Factorio: i-0745805b004ea5306</li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
