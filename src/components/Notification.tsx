@@ -1,12 +1,12 @@
 import classNames from "classnames";
 import React from "react";
 
-export interface ApiResponseNotification {
+export interface Notification {
   isSuccessful?: boolean;
   message?: string;
 }
 
-export default function ApiResponseNotification({ isSuccessful, message }: ApiResponseNotification) {
+export default function Notification({ isSuccessful, message }: Notification) {
   if (isSuccessful !== undefined) {
     return (
       <div

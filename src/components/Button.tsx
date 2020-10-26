@@ -14,7 +14,7 @@ export default function Button({ text, classes, onClick, isActive, isLoading }: 
     <p className="control">
       <button
         onClick={onClick}
-        className={classNames(classes,{
+        className={classNames(classes, {
           button: true,
           "is-loading": isLoading,
         })}

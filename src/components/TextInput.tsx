@@ -1,12 +1,12 @@
 import React from "react";
 
-export interface InputProps {
+export interface TextInputProps {
   value: string;
-  onChange: (newValue: string) => void;
+  onChange: (value: string) => void;
   placeholder: string;
 }
 
-export default function Input({ value, onChange, placeholder }: InputProps) {
+export default function TextInput({ value, onChange, placeholder }: TextInputProps) {
   return (
     <div className="field">
       <div className="control">

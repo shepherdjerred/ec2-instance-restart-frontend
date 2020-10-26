@@ -1,7 +1,6 @@
 import React from "react";
 
 export enum InstanceStatus {
-  UNKNOWN,
   PENDING,
   RUNNING,
   SHUTTING_DOWN,
@@ -10,7 +9,7 @@ export enum InstanceStatus {
   STOPPED,
 }
 
-export function stringToInstanceStatus(status: string): InstanceStatus {
+export function stringToInstanceStatus(status: string): InstanceStatus | undefined {
   switch (status) {
     case "pending":
       return InstanceStatus.PENDING;
@@ -25,11 +24,11 @@ export function stringToInstanceStatus(status: string): InstanceStatus {
     case "stopped":
       return InstanceStatus.STOPPED;
     default:
-      return InstanceStatus.UNKNOWN;
+      return undefined;
   }
 }
 
-export function instanceStatusToString(status: InstanceStatus): string {
+export function instanceStatusToString(status: InstanceStatus | undefined): string {
   switch (status) {
     case InstanceStatus.PENDING:
       return "Pending";
@@ -43,17 +42,17 @@ export function instanceStatusToString(status: InstanceStatus): string {
       return "Stopping";
     case InstanceStatus.TERMINATED:
       return "Terminated";
-    case InstanceStatus.UNKNOWN:
+    case undefined:
       return "Unknown";
   }
 }
 
 export interface InstanceStatusNotificationProps {
-  status: InstanceStatus;
+  status?: InstanceStatus;
 }
 
 export default function InstanceStatusNotification({ status }: InstanceStatusNotificationProps) {
-  if (status === InstanceStatus.UNKNOWN) {
+  if (status === undefined) {
     return null;
   } else {
     return <div className="notification">{"Instance Status: " + instanceStatusToString(status)}</div>;

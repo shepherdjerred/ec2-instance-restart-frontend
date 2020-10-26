@@ -1,26 +1,21 @@
-import Input from "./Input";
+import TextInput from "./TextInput";
 import React, { useState } from "react";
+import { Settings } from "../settings";
 
-export interface Credentials {
-  instanceId: string;
-  awsAccessKeyId: string;
-  awsSecretAccessKey: string;
+export interface SettingsInputProps {
+  initialSettings: Settings;
+  onSettingsChange: (credentials: Settings) => void;
 }
 
-export interface InstanceCredentialsProps {
-  initialCredentials: Credentials;
-  onCredentialsChange: (credentials: Credentials) => void;
-}
-
-export default function InstanceCredentials({ initialCredentials, onCredentialsChange }: InstanceCredentialsProps) {
-  const [instanceCredentials, setInstanceCredentials] = useState(initialCredentials);
+export default function SettingsInput({ initialSettings, onSettingsChange }: SettingsInputProps) {
+  const [instanceCredentials, setInstanceCredentials] = useState(initialSettings);
 
   const handleInstanceIdChange = (newValue: string): void => {
     setInstanceCredentials({
       ...instanceCredentials,
       instanceId: newValue,
     });
-    onCredentialsChange(instanceCredentials);
+    onSettingsChange(instanceCredentials);
   };
 
   const handleAwsAccessKeyIdChange = (newValue: string): void => {
@@ -28,7 +23,7 @@ export default function InstanceCredentials({ initialCredentials, onCredentialsC
       ...instanceCredentials,
       awsAccessKeyId: newValue,
     });
-    onCredentialsChange(instanceCredentials);
+    onSettingsChange(instanceCredentials);
   };
 
   const handleAwsSecretAccessKeyChange = (newValue: string): void => {
@@ -36,18 +31,18 @@ export default function InstanceCredentials({ initialCredentials, onCredentialsC
       ...instanceCredentials,
       awsSecretAccessKey: newValue,
     });
-    onCredentialsChange(instanceCredentials);
+    onSettingsChange(instanceCredentials);
   };
 
   return (
     <>
-      <Input value={instanceCredentials.instanceId} onChange={handleInstanceIdChange} placeholder="instance_id" />
-      <Input
+      <TextInput value={instanceCredentials.instanceId} onChange={handleInstanceIdChange} placeholder="instance_id" />
+      <TextInput
         value={instanceCredentials.awsAccessKeyId}
         onChange={handleAwsAccessKeyIdChange}
         placeholder="aws_access_key_id"
       />
-      <Input
+      <TextInput
         value={instanceCredentials.awsSecretAccessKey}
         onChange={handleAwsSecretAccessKeyChange}
         placeholder="aws_secret_access_key"
