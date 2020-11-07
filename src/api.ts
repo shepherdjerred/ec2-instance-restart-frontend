@@ -46,7 +46,7 @@ export async function startInstance(settings: Settings) {
 
   return {
     statusCode: response.status,
-    body: response.statusText,
+    body: response.data.body,
   };
 }
 
@@ -60,6 +60,6 @@ export async function stopInstance(settings: Settings) {
 
   return {
     statusCode: response.status,
-    body: response.statusText,
+    body: response.data.body,
   };
 }

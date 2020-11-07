@@ -8,6 +8,7 @@ import Notification from "./Notification";
 import SettingsInput from "./SettingsInput";
 import { ApiResponse, getInstanceStatus, startInstance, stopInstance } from "../api";
 import { load, save } from "../datastore";
+import { Settings } from "../settings";
 
 enum Button {
   START,
@@ -19,7 +20,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [apiResponse, setApiResponse] = useState<ApiResponse | undefined>();
   const [instanceStatus, setInstanceStatus] = useState<InstanceStatus | undefined>(undefined);
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<Settings>({
     ...load(),
   });
 
@@ -38,13 +39,13 @@ export default function Home() {
     setActiveButton(Button.START);
     setIsLoading(true);
     setApiResponse(undefined);
-    return async () => {
+    return (async () => {
       const response = await startInstance(settings);
       setIsLoading(false);
       setActiveButton(undefined);
       setApiResponse(response);
-    };
-  }, [isLoading]);
+    })();
+  }, [settings]);
 
   const stop = useCallback(() => {
     if (activeButton !== undefined) {
@@ -54,13 +55,13 @@ export default function Home() {
     setActiveButton(Button.STOP);
     setIsLoading(true);
     setApiResponse(undefined);
-    return async () => {
+    return (async () => {
       const response = await stopInstance(settings);
       setIsLoading(false);
       setActiveButton(undefined);
       setApiResponse(response);
-    };
-  }, [isLoading]);
+    })();
+  }, [settings]);
 
   return (
     <div>
@@ -74,7 +75,14 @@ export default function Home() {
                 message={apiResponse?.body as string}
               />
               <InstanceStatusNotification status={instanceStatus} />
-              <SettingsInput initialSettings={settings} onSettingsChange={setSettings} />
+              <SettingsInput
+                initialSettings={settings}
+                onSettingsChange={(newSettings) => {
+                  setSettings(newSettings);
+                  console.log(newSettings);
+                }}
+                isLoading={isLoading}
+              />
               <Buttons>
                 <StartButton
                   onClick={start}
@@ -87,13 +95,6 @@ export default function Home() {
                   isLoading={isLoading && activeButton === Button.STOP}
                 />
               </Buttons>
-            </div>
-            <div className="column is-one-fifth">
-              <h2 className="title">Instance IDs</h2>
-              <ul>
-                <li>Minecraft: i-0784bddc3df66775a</li>
-                <li>Factorio: i-0745805b004ea5306</li>
-              </ul>
             </div>
           </div>
         </div>
