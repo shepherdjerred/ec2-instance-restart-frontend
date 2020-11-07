@@ -45,6 +45,7 @@ export default function Home() {
       setActiveButton(undefined);
       setApiResponse(response);
     })();
+    // eslint-disable-next-line
   }, [settings]);
 
   const stop = useCallback(() => {
@@ -61,6 +62,7 @@ export default function Home() {
       setActiveButton(undefined);
       setApiResponse(response);
     })();
+    // eslint-disable-next-line
   }, [settings]);
 
   return (
