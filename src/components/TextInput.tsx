@@ -5,9 +5,10 @@ export interface TextInputProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  disabled?: boolean;
 }
 
-export default function TextInput({ label, value, onChange, placeholder }: TextInputProps) {
+export default function TextInput({ label, value, onChange, placeholder, disabled }: TextInputProps) {
   return (
     <div className="field">
       <label className="label">{label}</label>
@@ -18,6 +19,7 @@ export default function TextInput({ label, value, onChange, placeholder }: TextI
           onChange={(event) => onChange(event.target.value)}
           placeholder={placeholder || ""}
           className="input"
+          disabled={disabled}
         />
       </div>
     </div>

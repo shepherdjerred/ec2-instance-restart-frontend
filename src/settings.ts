@@ -1,5 +1,7 @@
+import { Instance } from "./instances";
+
 export interface Settings {
-  instanceId: string;
+  instance: Instance;
   awsAccessKeyId: string;
   awsSecretAccessKey: string;
 }

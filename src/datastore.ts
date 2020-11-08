@@ -8,7 +8,7 @@ export function load(): Settings {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return (
     JSON.parse(localStorage.getItem("settings") || "0") || {
-      instanceId: "",
+      instance: "",
       awsSecretAccessKey: "",
       awsAccessKeyId: "",
     }

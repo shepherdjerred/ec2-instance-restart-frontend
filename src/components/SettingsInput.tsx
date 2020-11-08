@@ -2,7 +2,7 @@ import TextInput from "./TextInput";
 import React, { useState } from "react";
 import { Settings } from "../settings";
 import InstanceSelector from "./InstanceSelector";
-import instances from "../Instances";
+import instances, { Instance } from "../instances";
 
 export interface SettingsInputProps {
   initialSettings: Settings;
@@ -11,30 +11,35 @@ export interface SettingsInputProps {
 }
 
 export default function SettingsInput({ initialSettings, onSettingsChange, isLoading }: SettingsInputProps) {
-  const [instanceCredentials, setInstanceCredentials] = useState(initialSettings);
+  const [settings, setSettings] = useState(initialSettings);
 
-  const handleInstanceIdChange = (newValue: string): void => {
-    setInstanceCredentials({
-      ...instanceCredentials,
-      instanceId: newValue,
-    });
-    onSettingsChange(instanceCredentials);
+  const handleSettingsUpdate = (newSettings: Settings): void => {
+    setSettings(newSettings);
+    onSettingsChange(newSettings);
+  };
+
+  const handleInstanceIdChange = (newValue: Instance): void => {
+    const newSettings = {
+      ...settings,
+      instance: newValue,
+    };
+    handleSettingsUpdate(newSettings);
   };
 
   const handleAwsAccessKeyIdChange = (newValue: string): void => {
-    setInstanceCredentials({
-      ...instanceCredentials,
+    const newSettings = {
+      ...settings,
       awsAccessKeyId: newValue,
-    });
-    onSettingsChange(instanceCredentials);
+    };
+    handleSettingsUpdate(newSettings);
   };
 
   const handleAwsSecretAccessKeyChange = (newValue: string): void => {
-    setInstanceCredentials({
-      ...instanceCredentials,
+    const newSettings = {
+      ...settings,
       awsSecretAccessKey: newValue,
-    });
-    onSettingsChange(instanceCredentials);
+    };
+    handleSettingsUpdate(newSettings);
   };
 
   return (
@@ -42,19 +47,19 @@ export default function SettingsInput({ initialSettings, onSettingsChange, isLoa
       <InstanceSelector
         instances={instances}
         isDisabled={isLoading}
-        onSelectedInstanceUpdate={(newInstance) => {
-          handleInstanceIdChange(newInstance.instanceId);
-        }}
+        onSelectedInstanceUpdate={handleInstanceIdChange}
       />
       <TextInput
         label="AWS Access Key ID"
-        value={instanceCredentials.awsAccessKeyId}
+        value={settings.awsAccessKeyId}
         onChange={handleAwsAccessKeyIdChange}
+        disabled={isLoading}
       />
       <TextInput
         label="AWS Secret Access Key"
-        value={instanceCredentials.awsSecretAccessKey}
+        value={settings.awsSecretAccessKey}
         onChange={handleAwsSecretAccessKeyChange}
+        disabled={isLoading}
       />
     </>
   );

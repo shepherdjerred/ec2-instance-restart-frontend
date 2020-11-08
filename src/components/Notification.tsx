@@ -1,25 +1,27 @@
 import classNames from "classnames";
 import React from "react";
 
+export enum Status {
+  LOADING,
+  SUCCESS,
+  ERROR,
+}
+
 export interface Notification {
-  isSuccessful?: boolean;
+  status: Status;
   message?: string;
 }
 
-export default function Notification({ isSuccessful, message }: Notification) {
-  if (isSuccessful !== undefined) {
-    return (
-      <div
-        className={classNames({
-          notification: true,
-          "is-danger": !isSuccessful,
-          "is-primary": isSuccessful,
-        })}
-      >
-        {message}
-      </div>
-    );
-  } else {
-    return null;
-  }
+export default function Notification({ status, message }: Notification) {
+  return (
+    <div
+      className={classNames({
+        notification: true,
+        "is-danger": status === Status.ERROR,
+        "is-primary": status === Status.SUCCESS,
+      })}
+    >
+      {message}
+    </div>
+  );
 }

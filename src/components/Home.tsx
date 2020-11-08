@@ -4,11 +4,12 @@ import Hero from "./Hero";
 import StartButton from "./StartButton";
 import StopButton from "./StopButton";
 import Buttons from "./Buttons";
-import Notification from "./Notification";
+import Notification, { Status } from "./Notification";
 import SettingsInput from "./SettingsInput";
 import { ApiResponse, getInstanceStatus, startInstance, stopInstance } from "../api";
 import { load, save } from "../datastore";
 import { Settings } from "../settings";
+import ErrorBoundary from "./ErrorBoundary";
 
 enum Button {
   START,
@@ -25,45 +26,40 @@ export default function Home() {
   });
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      void getInstanceStatus(settings).then((status) => setInstanceStatus(status));
+    const timer = setTimeout(async () => {
+      const status = await getInstanceStatus(settings);
+      setInstanceStatus(status);
     }, 1000);
     return () => clearTimeout(timer);
   });
 
-  const start = useCallback(() => {
-    if (activeButton !== undefined) {
-      return;
-    }
-    save(settings);
-    setActiveButton(Button.START);
-    setIsLoading(true);
-    setApiResponse(undefined);
-    return (async () => {
-      const response = await startInstance(settings);
-      setIsLoading(false);
-      setActiveButton(undefined);
-      setApiResponse(response);
-    })();
-    // eslint-disable-next-line
-  }, [settings]);
+  const makeApiCall = (button: Button, functionToCall: (settings: Settings) => Promise<ApiResponse>) => {
+    return () => {
+      setActiveButton(button);
+      setIsLoading(true);
+      setApiResponse(undefined);
 
-  const stop = useCallback(() => {
-    if (activeButton !== undefined) {
-      return;
-    }
-    save(settings);
-    setActiveButton(Button.STOP);
-    setIsLoading(true);
-    setApiResponse(undefined);
-    return (async () => {
-      const response = await stopInstance(settings);
-      setIsLoading(false);
-      setActiveButton(undefined);
-      setApiResponse(response);
-    })();
-    // eslint-disable-next-line
-  }, [settings]);
+      save(settings);
+
+      return (async () => {
+        const response = await functionToCall(settings);
+        setIsLoading(false);
+        setActiveButton(undefined);
+        setApiResponse(response);
+      })();
+    };
+  };
+
+  const start = useCallback(makeApiCall(Button.START, startInstance), [settings]);
+  const stop = useCallback(makeApiCall(Button.STOP, stopInstance), [settings]);
+
+  const notification =
+    apiResponse !== undefined || isLoading ? (
+      <Notification
+        status={apiResponse ? (apiResponse?.statusCode < 400 ? Status.SUCCESS : Status.ERROR) : Status.LOADING}
+        message={(apiResponse?.body as string) || "Loading..."}
+      />
+    ) : undefined;
 
   return (
     <div>
@@ -72,31 +68,29 @@ export default function Home() {
         <div className="container">
           <div className="columns">
             <div className="column is-one-third is-offset-one-third">
-              <Notification
-                isSuccessful={apiResponse ? apiResponse?.statusCode < 400 : undefined}
-                message={apiResponse?.body as string}
-              />
-              <InstanceStatusNotification status={instanceStatus} />
-              <SettingsInput
-                initialSettings={settings}
-                onSettingsChange={(newSettings) => {
-                  setSettings(newSettings);
-                  console.log(newSettings);
-                }}
-                isLoading={isLoading}
-              />
-              <Buttons>
-                <StartButton
-                  onClick={start}
-                  isActive={isLoading && activeButton !== Button.START}
-                  isLoading={isLoading && activeButton === Button.START}
+              <ErrorBoundary>
+                {notification}
+                <InstanceStatusNotification status={instanceStatus} />
+                <SettingsInput
+                  initialSettings={settings}
+                  onSettingsChange={(newSettings) => {
+                    setSettings(newSettings);
+                  }}
+                  isLoading={isLoading}
                 />
-                <StopButton
-                  onClick={stop}
-                  isActive={isLoading && activeButton !== Button.STOP}
-                  isLoading={isLoading && activeButton === Button.STOP}
-                />
-              </Buttons>
+                <Buttons>
+                  <StartButton
+                    onClick={start}
+                    isActive={isLoading && activeButton !== Button.START}
+                    isLoading={isLoading && activeButton === Button.START}
+                  />
+                  <StopButton
+                    onClick={stop}
+                    isActive={isLoading && activeButton !== Button.STOP}
+                    isLoading={isLoading && activeButton === Button.STOP}
+                  />
+                </Buttons>
+              </ErrorBoundary>
             </div>
           </div>
         </div>

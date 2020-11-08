@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Instance } from "../Instances";
+import { Instance } from "../instances";
 
 export interface InstanceSelectorProps {
   instances: Instance[];
@@ -33,7 +33,7 @@ export default function InstanceSelector({ instances, onSelectedInstanceUpdate, 
 
               if (newInstance) {
                 setSelectedInstance(newInstance);
-                onSelectedInstanceUpdate(selectedInstance);
+                onSelectedInstanceUpdate(newInstance);
               }
             }}
           >
