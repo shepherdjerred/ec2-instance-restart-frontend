@@ -14,10 +14,6 @@ export interface ApiResponseBody {
   details: string;
 }
 
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export async function getInstanceStatus(settings: Settings) {
   const response = await makeApiRequest(settings, "/status");
 
