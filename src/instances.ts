@@ -15,6 +15,7 @@ const instances = [
   {
     name: "Among Us",
     instanceId: "i-00bbb946281bd5baa",
+  },
 ];
 
 export default instances;
