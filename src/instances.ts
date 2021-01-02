@@ -14,7 +14,7 @@ const instances = [
   },
   {
     name: "Among Us",
-    instanceId: "i-082155fac3fe7c78b",
+    instanceId: "i-099322e02b2ddd8ba",
   },
 ];
 
